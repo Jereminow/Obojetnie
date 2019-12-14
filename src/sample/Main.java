@@ -47,17 +47,56 @@ public class Main extends Application {
 
         Text fontSizeText = new Text("Font size");
         TextField fontSizeTextField = new TextField();
+        fontSizeTextField.setText("12");
 
-        Text text = new Text("Text");
-        TextField textField = new TextField();
+        Text textToDrawText = new Text();
 
         Text fontText = new Text("Font");
         ComboBox<String> fontComboBox = new ComboBox<String>(FXCollections.observableList(Font.getFontNames()));
         System.out.println(Font.getFontNames());
+        fontComboBox.setValue(Font.getFontNames().get(0));
+
+        Text text = new Text("Text");
+        TextField textField = new TextField();
+
+        fontComboBox.setOnAction(event -> {
+            int fontSize = Integer.parseInt(fontSizeTextField.getText());
+            String textToDraw = textField.getText();
+            String fontName = fontComboBox.getValue();
+
+            textToDrawText.setText(textToDraw);
+            textToDrawText.setFont(Font.font(fontName, fontSize));
+        });
+
+        textField.setOnKeyTyped(event -> {
+            int fontSize = Integer.parseInt(fontSizeTextField.getText());
+            String textToDraw = textField.getText();
+            String fontName = fontComboBox.getValue();
+
+            textToDrawText.setText(textToDraw);
+            textToDrawText.setFont(Font.font(fontName, fontSize));
+        });
+
+        fontSizeTextField.setOnKeyTyped(event -> {
+            int fontSize = Integer.parseInt(fontSizeTextField.getText());
+            String textToDraw = textField.getText();
+            String fontName = fontComboBox.getValue();
+
+            textToDrawText.setText(textToDraw);
+            textToDrawText.setFont(Font.font(fontName, fontSize));
+        });
 
         Button button = new Button("Ok");
         button.setOnAction(event -> {
+            int fontSize = Integer.parseInt(fontSizeTextField.getText());
+            String textToDraw = textField.getText();
+            String fontName = fontComboBox.getValue();
 
+            textToDrawText.setText(textToDraw);
+            textToDrawText.setText(textToDraw);
+            textToDrawText.setFont(Font.font(fontName, fontSize));
+
+            getColorsFromInputtedText(fontSize, textToDraw, fontName);
         });
 
         root.add(fontSizeText, 0, 0);
@@ -66,16 +105,20 @@ public class Main extends Application {
         root.add(textField, 1, 1);
         root.add(fontText, 0, 2);
         root.add(fontComboBox, 1, 2);
+        root.add(button, 1, 3);
+        root.add(textToDrawText, 0, 4, 2, 1);
 
         stage.setScene(new Scene(root, 400, 400));
         stage.show();
     }
 
-    public Color[][] getColorsFromInputtedText() {
+    public Color[][] getColorsFromInputtedText(int fontSize, String textToDraw, String fontName) {
         Color[][] colors = new Color[5][5];
 
         return colors;
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
