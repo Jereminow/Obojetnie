@@ -1,15 +1,22 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -40,6 +47,7 @@ public class Main extends Application {
 
         Button fileChoice = new Button("Create from chosen file");
         Button textWrite = new Button("Create from input text");
+        textWrite.setOnAction(event -> inputTextLayout());
         Button drawing = new Button("Create from a drawing");
         fileChoice.setOnAction(event -> {
             try {
@@ -55,6 +63,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
     public void fromFile() throws FileNotFoundException {
         stage = new Stage();
         stage.setTitle("Get image from file");
@@ -117,24 +126,62 @@ public class Main extends Application {
         stage.show();
 
     }
-public static Color[][] colors(File file) throws IOException {
+    public static Color[][] colors(File file) throws IOException {
         BufferedImage image = ImageIO.read(file);
         Color[][] colorArray = new Color[image.getWidth()][image.getHeight()];
-    for (int x = 0; x < image.getWidth(); x++) {
-        for (int y = 0; y < image.getHeight(); y++) {
-            int clr = image.getRGB(x,y);
-            int red = (clr & 0x00ff0000) >> 16;
-            int green = (clr & 0x0000ff00) >> 8;
-            int blue = clr & 0x000000ff;
-            Color cl = new Color(red/255.0,green/255.0,blue/255.0,1);
-            colorArray[x][y] = cl;
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                int clr = image.getRGB(x,y);
+                int red = (clr & 0x00ff0000) >> 16;
+                int green = (clr & 0x0000ff00) >> 8;
+                int blue = clr & 0x000000ff;
+                Color cl = new Color(red/255.0,green/255.0,blue/255.0,1);
+                colorArray[x][y] = cl;
+            }
         }
+        return colorArray;
     }
-    return colorArray;
-}
 
+    public void inputTextLayout() {
+        Stage stage = new Stage();
+        stage.setTitle("Input text");
 
+        GridPane root = new GridPane();
+        root.setAlignment(Pos.CENTER);
+        root.setHgap(50);
+        root.setVgap(50);
 
+        Text fontSizeText = new Text("Font size");
+        TextField fontSizeTextField = new TextField();
+
+        Text text = new Text("Text");
+        TextField textField = new TextField();
+
+        Text fontText = new Text("Font");
+        ComboBox<String> fontComboBox = new ComboBox<String>(FXCollections.observableList(Font.getFontNames()));
+        System.out.println(Font.getFontNames());
+
+        Button button = new Button("Ok");
+        button.setOnAction(event -> {
+
+        });
+
+        root.add(fontSizeText, 0, 0);
+        root.add(fontSizeTextField, 1, 0);
+        root.add(text, 0, 1);
+        root.add(textField, 1, 1);
+        root.add(fontText, 0, 2);
+        root.add(fontComboBox, 1, 2);
+
+        stage.setScene(new Scene(root, 400, 400));
+        stage.show();
+    }
+
+    public Color[][] getColorsFromInputtedText() {
+        Color[][] colors = new Color[5][5];
+
+        return colors;
+    }
     public static void main(String[] args) {
         launch(args);
     }
