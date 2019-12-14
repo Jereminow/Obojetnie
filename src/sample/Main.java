@@ -2,19 +2,23 @@ package sample;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
@@ -23,6 +27,7 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -44,6 +49,7 @@ public class Main extends Application {
         VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
         root.setSpacing(50);
+
 
         Button fileChoice = new Button("Create from chosen file");
         Button textWrite = new Button("Create from input text");
@@ -120,7 +126,16 @@ public class Main extends Application {
             }
 
         });
-        root.getChildren().addAll(addFile,comboBox,okButt);
+        Button backton = new Button("Back");
+        backton.setOnAction(event -> {
+            stage.close();
+            try {
+                start(stage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        root.getChildren().addAll(addFile,comboBox,okButt,backton);
         Scene scene = new Scene(root,600,600);
         stage.setScene(scene);
         stage.show();
@@ -181,6 +196,25 @@ public class Main extends Application {
         Color[][] colors = new Color[5][5];
 
         return colors;
+    }
+    public static void saveCanvasInFile(Canvas canvas) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("ImageFiles","*.png","*.jpg"));
+
+        File file = fileChooser.showSaveDialog(new Stage());
+
+        if(file!=null){
+            int width = (int) canvas.getWidth();
+            int height = (int) canvas.getHeight();
+            WritableImage writableImage = new WritableImage(width,height);
+            canvas.snapshot(null,writableImage);
+            RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage,null);
+            ImageIO.write(renderedImage,"jpg",file);
+
+
+        }
+
+
     }
     public static void main(String[] args) {
         launch(args);
